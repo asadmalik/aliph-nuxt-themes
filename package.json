@@ -1,0 +1,18 @@
+{
+  "name": "nuxt-themes-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "build:theme-elegant": "pnpm --filter @asadmalik.pk/theme-elegant build",
+    "dev:theme-elegant": "pnpm --filter @asadmalik.pk/theme-elegant dev",
+    "dev:playground": "pnpm --filter playground dev",
+    "generate:playground": "pnpm --filter playground generate",
+    "postinstall:playground": "pnpm --filter playground prepare",
+    "preview:playground": "pnpm --filter playground preview",
+    "cleanAll": "rimraf node_modules pnpm-lock.yaml && pnpm -r exec rimraf node_modules .nuxt .output",
+    "reinstall": "pnpm run cleanAll && pnpm install"
+  },
+  "packageManager": "pnpm@9.15.5+sha256.8472168c3e1fd0bff287e694b053fccbbf20579a3ff9526b6333beab8df65a8d"
+}

@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "@tailwindcss/typography": "0.5.19"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "6.14.0"
+  },
+  "files": [
+    "components",
+    "layouts",
+    "composables",
+    "app.config.ts",
+    "tailwind.config.ts",
+    "nuxt.config.ts"
+  ],
+  "license": "MIT",
+  "name": "@asadmalik.pk/theme-elegant",
+  "peerDependencies": {
+    "nuxt": "^4.2.1"
+  },
+  "scripts": {
+    "build": "nuxt build",
+    "clean": "rimraf .nuxt dist .output node_modules node_modules/.cache",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "preview": "nuxt preview",
+    "publish": "pnpm publish --access public"
+  },
+  "type": "module",
+  "version": "0.1.6"
+}
