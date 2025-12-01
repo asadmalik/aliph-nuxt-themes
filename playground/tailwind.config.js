@@ -73,6 +73,10 @@ module.exports = {
                     900: '#fff7ce',
                 },
             },
+            fontFamily: {
+                heading: ['Inter', 'sans-serif'],
+                body: ['Spectral', 'serif'],
+            }
         },
     },
     plugins: [require('@tailwindcss/typography')],
