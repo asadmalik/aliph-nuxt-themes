@@ -16,6 +16,8 @@
   if (!page.value) {
     throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
   }
+  else
+  console.log('Loaded page:', page.value);
 
   // Function to format date
   const formatDate = (date) => {

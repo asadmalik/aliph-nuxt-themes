@@ -61,5 +61,5 @@
   const logoPropsSrc = appConfig.navigation.logo.src;
   const navigation = appConfig.navigation;
   const footerLinks = appConfig.navigation.footer.items;
-  const siteDescription = appConfig.content.siteDescription;
+  const siteDescription = appConfig.site.description || '';
 </script>

@@ -1,81 +1,141 @@
-<!--layers\theme-elegant\components\BlogCard.vue-->
+<!-- layers/theme-elegant/components/BlogCard.vue -->
 <template>
-	<div class="rounded-lg shadow-md hover:shadow-lg overflow-hidden bg-white dark:bg-gray-800">
-		<NuxtLink :to="post.path">
-			<img v-if="post.featureImage" :src="post.featureImage" :alt="post.title" class="w-full h-48 object-cover">
-		</NuxtLink>
-		<div class="p-6">
-			<!-- <NuxtLink :to="`/blog/category/${post.category.toLowerCase().replace(/\s+/g, '-')}`"
-	              class="text-sm text-mikado_yellow-500 hover:underline">
-	              {{ post.category }}
-	            </NuxtLink> -->
+  <div
+    class="rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
+  >
+    <!-- Image -->
+    <NuxtLink :to="post.path">
+      <img
+        v-if="post.featureImage"
+        :src="post.featureImage"
+        :alt="post.title"
+        class="w-full h-48 md:h-56 object-cover"
+      />
+    </NuxtLink>
 
-			<!-- Category -->
-			<div v-if="config.theme.blog.category.visible">
-				<NuxtLink v-if="config.theme.blog.category.linkArchivePage" :to="`/blog/category/${post.category}`"
-					:class="config.theme.blog.category.colorClass">
-					{{ post.category }}
-				</NuxtLink>
-				<span v-else :class="config.theme.blog.category.colorClass">{{ post.category }}</span>
-			</div>
+    <div class="p-5 md:p-6 space-y-3">
+      <!-- Category -->
+      <div v-if="category.visible && post.category">
+        <NuxtLink
+          :to="`/blog/category/${categorySlug}`"
+          :class="category.colorClass"
+        >
+          {{ post.category }}
+        </NuxtLink>
+      </div>
 
+      <!-- Title -->
+      <NuxtLink :to="post.path">
+        <h2 class="text-xl font-semibold leading-snug hover:text-[#172e51] dark:hover:text-slate-50">
+          {{ post.title }}
+        </h2>
+      </NuxtLink>
 
+      <!-- Excerpt -->
+      <NuxtLink
+        v-if="showExcerpt && post.excerpt"
+        :to="post.path"
+      >
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 line-clamp-3">
+          {{ post.excerpt }}
+        </p>
+      </NuxtLink>
 
-			<NuxtLink :to="post.path">
-				<h2 class="text-xl font-bold mt-2">{{ post.title }}</h2>
-			</NuxtLink>
-			<NuxtLink :to="post.path">
-				<p class="text-gray-600 dark:text-gray-300 mt-2">{{ post.excerpt }}</p>
-			</NuxtLink>
-			<div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
-				<NuxtLink :to="`/blog/archive/${post.author}`" :class="config.theme.blog.author.colorClass">
-					<span v-if="config.theme.blog.author.visible">
-						{{ post.author }} &nbsp;•&nbsp;
-					</span>
-				</NuxtLink>
-				<NuxtLink v-if="config.theme.blog.publishDate.linkArchivePage"
-					:to="`/blog/archive/${getYearMonthString(post.date)}`"
-					:class="config.theme.blog.publishDate.colorClass">
-					{{ formatDate(post.date) }}
-				</NuxtLink>
-				<span v-else :class="config.theme.blog.publishDate.colorClass">
-					{{ formatDate(post.date) }}
-				</span>
+      <!-- Meta -->
+      <div
+        v-if="showMeta && (author.visible || date.visible)"
+        class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400"
+      >
+        <!-- Author -->
+        <template v-if="author.visible && post.author">
+          <NuxtLink
+            :to="`/blog/archive/${post.author}`"
+            :class="author.colorClass"
+          >
+            {{ post.author }}
+          </NuxtLink>
+          <span class="mx-1">•</span>
+        </template>
 
-			</div>
-		</div>
-
-	</div>
+        <!-- Date -->
+        <NuxtLink
+          v-if="date.visible && post.date"
+          :to="`/blog/archive/${getYearMonthString(post.date)}`"
+          :class='date.colorClass|| ""'
+        >
+          {{ formatDate(post.date) }}
+        </NuxtLink>
+      </div>
+    </div>
+  </div>
 </template>
-<script setup>
 
+<script setup lang="ts">
+const props = defineProps<{
+  post: {
+    path: string
+    title: string
+    excerpt?: string
+    featureImage?: string
+    category?: string
+    author?: string
+    date?: string | Date
+  }
+}>()
 
-	const props = defineProps({
-		post: Object
-	});
-	const config = useAppConfig();
-	console.log('theme config:', config.theme.blog);
-	await nextTick();
+const appConfig = useAppConfig()
 
-	// Format date function
-	const formatDate = (date) => {
-		if (!date) return "";
-		return new Date(date).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-		});
-	};
+// Safe access to theme config with fallbacks
+const themeElegant = computed(() => appConfig.themeElegant ?? {})
+const blog = computed(() => themeElegant.value.blog ?? {})
+const listing = computed(() => blog.value.listing ?? {})
+const meta = computed(() => listing.value.meta ?? {})
 
-	const getYearMonthString = (date) => {
-		if (!date) return "";
-		const dateObj = new Date(date);
-		const year = dateObj.getFullYear();
-		const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Ensures two-digit month format
+const showExcerpt = computed(() => listing.value.showExcerpt ?? true)
+const showMeta = computed(() => listing.value.showMeta ?? true)
 
+const category = computed(() => meta.value.category ?? {
+  visible: true,
+  colorClass:
+    'inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#172e51] bg-slate-50 dark:border-slate-700 dark:bg-slate-900/60',
+})
 
-		//console.log('theme: ', `'${year}-${month}'`)
-		return year + '-' + month;
-	};
+const author = computed(() => meta.value.author ?? {
+  visible: true,
+  colorClass:
+    'font-medium text-slate-700 hover:text-[#172e51] dark:text-slate-200 dark:hover:text-white',
+})
 
+const date = computed(() => meta.value.date ?? {
+  visible: true,
+  colorClass:
+    'hover:text-[#172e51] dark:hover:text-white',
+})
+
+// Slug for category URL
+const categorySlug = computed(() => {
+  if (!props.post.category) return ''
+  return props.post.category.toLowerCase().replace(/\s+/g, '-')
+})
+
+// Helpers
+const formatDate = (date: string | Date | undefined) => {
+  if (!date) return ''
+  const d = new Date(date)
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+const getYearMonthString = (date: string | Date | undefined) => {
+  if (!date) return ''
+  const d = new Date(date)
+  if (Number.isNaN(d.getTime())) return ''
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
 </script>

@@ -61,7 +61,7 @@
 <script setup>
   import { ref } from 'vue';
   const appConfig = useAppConfig();
-  console.log('NavigationBar appConfig theme-elegant:', appConfig);
+  console.log('NavigationBar theme-elegant:', appConfig.navigation.items);
   const logoPropsSrc = appConfig.navigation.logo.src;
   const navigation = appConfig.navigation;
 

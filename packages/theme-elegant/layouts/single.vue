@@ -1,215 +1,163 @@
 <template>
   <LayoutShell>
-    <!-- Reading progress bar -->
-    <div class="fixed inset-x-0 top-0 z-40 h-1 bg-transparent">
-      <div
-        class="h-full origin-left bg-amber-500/90 transition-[transform] duration-150 ease-out dark:bg-amber-400/90"
-        :style="{ transform: `scaleX(${scrollProgress})` }"
-      />
-    </div>
+    <section class=" pb-24">
 
-    <div
-      class="relative w-full overflow-x-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50"
-    >
-      <!-- Soft background glow -->
-      <div
-        class="pointer-events-none absolute inset-x-0 top-0 z-0 h-80 bg-gradient-to-b from-amber-200/70 via-amber-100/40 to-transparent blur-3xl dark:from-amber-500/20 dark:via-amber-400/5"
-      />
 
-      <div class="relative z-10 container mx-auto max-w-6xl px-4 lg:px-8">
-        <article class="mx-auto max-w-3xl py-16 lg:py-24">
-          <!-- HEADER -->
-          <header class="mb-10 lg:mb-14">
-            <!-- Category + optional right meta -->
-            <div class="mb-4 flex items-center justify-between gap-3">
-              <div
-                class="inline-flex items-center gap-2 rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-700 shadow-sm ring-1 ring-slate-200/60 backdrop-blur-sm dark:bg-slate-900/60 dark:text-amber-300 dark:ring-slate-700/80"
-              >
-                <span class="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-300" />
+      <article class=" dark:bg-slate-950 dark:border-slate-800">
+        <!-- Hero -->
+        <div class="relative flex items-end bg-gradient-to-br from-[#172e51] via-slate-800 to-slate-700"
+          :class="single.heroHeightClass">
+          <div v-if="single.showHeroImage" class="absolute inset-0">
+            <slot name="featureImage" />
+            
+          </div>
+
+          <div
+            class="relative z-10 w-full p-6 md:p-10 text-white space-y-4 bg-gradient-to-t from-black/40 via-black/20">
+            <!-- Category pill -->
+            <div v-if="single.showCategoryPill"
+              class="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase">
+              <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 backdrop-blur">
                 <slot name="category" />
-              </div>
-
-              <div
-                v-if="$slots['meta-right']"
-                class="hidden text-xs text-slate-500 dark:text-slate-400 lg:inline-flex"
-              >
-                <slot name="meta-right" />
-              </div>
+              </span>
             </div>
 
             <!-- Title -->
-            <h1
-              class="text-balance text-3xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-slate-50"
-            >
+            <h1 class="text-center text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight">
               <slot name="title" />
             </h1>
 
-            <!-- Author / date / reading time / tags -->
-            <div
-              class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500 dark:text-slate-400"
-            >
-              <!-- Author avatar-ish -->
-              <div class="flex items-center gap-3">
-                <span
-                  class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700"
-                >
-                  <slot name="author-avatar">
-                    <!-- fallback: initials from author, if user wants later -->
-                    <span>✦</span>
-                  </slot>
+            <!-- Meta -->
+            <div v-if="single.showAuthor || single.showDate || typography.showReadingTime"
+              class="flex flex-wrap items-center gap-3 text-xs md:text-sm text-white/80">
+              <div v-if="single.showAuthor" class="flex items-center gap-2">
+                <span class="font-medium">
+                  <slot name="author" />
                 </span>
-                <div class="leading-tight">
-                  <div class="font-medium text-slate-900 dark:text-slate-50">
-                    <slot name="author" />
-                  </div>
-                  <div class="text-xs text-slate-500 dark:text-slate-400">
-                    <slot name="author-subline">Contributor</slot>
-                  </div>
-                </div>
               </div>
 
-              <span class="hidden h-1 w-1 rounded-full bg-slate-300 lg:inline-block dark:bg-slate-600" />
+              <span v-if="single.showAuthor && single.showDate">•</span>
 
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs uppercase tracking-[0.18em]">
-                  <slot name="date" />
-                </span>
+              <span v-if="single.showDate">
+                <slot name="date" />
+              </span>
 
-                <template v-if="$slots.readingTime">
-                  <span
-                    class="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600"
-                  />
-                  <span class="text-xs uppercase tracking-[0.18em]">
-                    <slot name="readingTime" />
-                  </span>
-                </template>
-              </div>
+              <span v-if="typography.showReadingTime && readingTime" class="flex items-center gap-2">
+                <span>•</span>
+                <span>{{ readingTime }} min read</span>
+              </span>
             </div>
-          </header>
-
-          <!-- FEATURE IMAGE -->
-          <section
-            v-if="$slots.featureImage"
-            class="mb-12 overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-900/2 shadow-[0_18px_45px_-20px_rgba(15,23,42,0.55)] transition hover:-translate-y-1 hover:shadow-[0_24px_60px_-28px_rgba(15,23,42,0.75)] dark:border-slate-800/90 dark:bg-slate-900"
-          >
-            <div class="aspect-[16/9] w-full">
-              <slot name="featureImage" />
+            <div>
+              <!-- Back link -->
+            <NuxtLink v-if="single.showBackLink" to="/blog"
+              class="text-sm text-white hover:underline flex items-center gap-2 mb-6 w-full text-center">
+              {{ single.backLinkText || '← Back to Blog' }}
+            </NuxtLink>
             </div>
-          </section>
+          </div>
+        </div>
 
-          <!-- LEAD / EXCERPT -->
-          <section
-            v-if="$slots.excerpt"
-            class="mb-10 border-l-4 border-amber-500/80 pl-4 text-lg text-slate-700 dark:text-slate-100"
-          >
-            <slot name="excerpt" />
-          </section>
-
-          <!-- TAGS row -->
-          <section v-if="$slots.tags" class="mb-8">
-            <div class="flex flex-wrap items-center gap-2">
-              <slot name="tags" />
-            </div>
-          </section>
-
-          <!-- BODY + optional sidebar -->
-          <section class="">
-            <!-- Main content -->
-            <div
-              class="prose prose-lg max-w-none prose-headings:scroll-mt-24 prose-headings:font-semibold prose-a:font-semibold prose-a:no-underline hover:prose-a:underline prose-blockquote:border-amber-500 prose-blockquote:text-slate-700 prose-img:rounded-2xl prose-pre:bg-slate-900 prose-pre:text-sm prose-pre:text-wrap dark:prose-invert dark:prose-blockquote:border-amber-400 dark:prose-blockquote:text-slate-100 dark:prose-pre:bg-slate-900"
-            >
-              <ContentRenderer
-                v-if="layoutCustomProps.body"
-                :value="layoutCustomProps.body"
-              />
+        <!-- Body + Sidebar -->
+        <div class="grid gap-10 px-6 py-10 md:px-10 lg:px-12"
+          :class="single.showSidebar && layout.showSidebarOnSingle ? 'lg:grid-cols-[minmax(0,1.8fr)_minmax(0,0.8fr)]' : 'lg:grid-cols-1'">
+          <!-- Main content -->
+          <div :class="[
+            layout.constrainedWidthClass,
+            'w-full mx-auto',
+          ]">
+            <!-- Optional CTA below hero -->
+            <div v-if="ctaBelowHero.enabled"
+              class="mb-10 rounded-xl border border-slate-200/70 bg-slate-50/80 p-5 dark:border-slate-700 dark:bg-slate-900/60">
+              <h2 class="text-lg font-semibold mb-2">
+                {{ ctaBelowHero.title }}
+              </h2>
+              <p class="text-sm text-slate-700 dark:text-slate-300 mb-4">
+                {{ ctaBelowHero.text }}
+              </p>
+              <NuxtLink :to="ctaBelowHero.buttonTo"
+                class="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium bg-[#172e51] text-white hover:bg-[#12243e] transition">
+                {{ ctaBelowHero.buttonText }}
+              </NuxtLink>
             </div>
 
-            <!-- Optional sticky sidebar (toc, extra meta etc.) -->
-            <aside
-              v-if="$slots.sidebar"
-              class="mt-12 hidden lg:col-span-4 lg:mt-0 lg:block"
-            >
-              <div
-                class="sticky top-28 rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm shadow-sm backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/80"
-              >
-                <slot name="sidebar" />
-              </div>
-            </aside>
-          </section>
+            <!-- Content body -->
+            <div :class="[
+              'prose prose-slate dark:prose-invert',
+              typography.bodySize,
+              'prose-headings:font-semibold prose-a:text-[#172e51] prose-a:no-underline hover:prose-a:underline',
+            ]">
+              <ContentRenderer :value="body" />
+            </div>
 
-          <!-- FOOTER META -->
-          <footer
-            class="mt-14 border-t border-slate-200 pt-8 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400"
-          >
-            <div
-              class="flex flex-wrap items-center justify-between gap-6"
-            >
-              <div class="flex items-center gap-3">
-                <span
-                  class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700"
-                >
-                  <slot name="author-footer-avatar">
-                    <span>✦</span>
-                  </slot>
-                </span>
-                <div class="leading-tight">
-                  <p
-                    class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400"
-                  >
-                    Written by
-                  </p>
-                  <p
-                    class="text-base font-medium text-slate-900 dark:text-slate-50"
-                  >
-                    <slot name="author" />
-                  </p>
-                </div>
+            <!-- CTA after content -->
+            <div v-if="ctaAfterContent.enabled"
+              class="mt-12 rounded-xl border border-slate-200/70 bg-slate-50/80 p-6 text-center dark:border-slate-700 dark:bg-slate-900/60">
+              <h2 class="text-xl font-semibold mb-2">
+                {{ ctaAfterContent.title }}
+              </h2>
+              <p class="text-sm text-slate-700 dark:text-slate-300 mb-4 max-w-xl mx-auto">
+                {{ ctaAfterContent.text }}
+              </p>
+              <NuxtLink :to="ctaAfterContent.buttonTo"
+                class="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium bg-[#172e51] text-white hover:bg-[#12243e] transition">
+                {{ ctaAfterContent.buttonText }}
+              </NuxtLink>
+            </div>
+
+            <!-- Related posts slot (consumer app can render them) -->
+            <div v-if="related.enabled" class="mt-16 border-t border-slate-200 pt-8 dark:border-slate-800">
+              <div class="flex items-center justify-between gap-4 mb-6">
+                <h2 class="text-lg font-semibold">
+                  {{ related.title }}
+                </h2>
+                <NuxtLink v-if="related.showMoreButton" to="/blog" class="text-sm text-[#172e51] hover:underline">
+                  {{ related.moreButtonText }}
+                </NuxtLink>
               </div>
 
-              <div v-if="$slots.footer" class="text-right text-xs">
-                <slot name="footer" />
-              </div>
+              <slot name="related" />
             </div>
-          </footer>
-        </article>
-      </div>
-    </div>
+          </div>
+
+          <!-- Sidebar: outline / widgets etc. -->
+          <aside v-if="single.showSidebar && layout.showSidebarOnSingle" class="space-y-8">
+            <!-- Table of contents / outline -->
+            <div v-if="single.showOutline"
+              class="rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm dark:border-slate-700 dark:bg-slate-900/60">
+              <h3 class="text-xs font-semibold tracking-wide text-slate-500 uppercase mb-2">
+                On this page
+              </h3>
+              <slot name="outline" />
+            </div>
+
+            <!-- Sidebar widgets slot (for subscribe, promos, etc) -->
+            <slot name="sidebar" />
+          </aside>
+        </div>
+      </article>
+    </section>
   </LayoutShell>
 </template>
 
-<script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import LayoutShell from '~/components/LayoutShell.vue'
+<script setup lang="ts">
+  const props = defineProps<{
+    body: any
+    readingTime?: number | null
+  }>()
 
-const layoutCustomProps = useAttrs()
+  const body = props.body
+  const readingTime = props.readingTime ?? null
 
-// Smooth reading progress (0–1)
-const scrollProgress = ref(0)
+  const config = useThemeElegantConfig()
 
-if (process.client) {
-  let ticking = false
+  console.log('Single layout props toc:', props.body.toc)
 
-  const handleScroll = () => {
-    if (ticking) return
-    ticking = true
+  const layout = computed(() => config.value.layout ?? {})
+  const typography = computed(() => config.value.typography ?? {})
+  const blog = computed(() => config.value.blog ?? {})
 
-    window.requestAnimationFrame(() => {
-      const doc = document.documentElement
-      const total = doc.scrollHeight - doc.clientHeight
-      const current = window.scrollY
-      scrollProgress.value =
-        total > 0 ? Math.min(1, Math.max(0, current / total)) : 0
-      ticking = false
-    })
-  }
-
-  onMounted(() => {
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll)
-  })
-}
+  const single = computed(() => blog.value.single ?? {})
+  const related = computed(() => blog.value.relatedPosts ?? {})
+  const ctaBelowHero = computed(() => blog.value.cta?.belowHero ?? { enabled: false })
+  const ctaAfterContent = computed(() => blog.value.cta?.afterContent ?? { enabled: false })
 </script>
