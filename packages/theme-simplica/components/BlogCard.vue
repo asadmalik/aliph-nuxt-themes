@@ -1,4 +1,4 @@
-<!--layers\simplica\components\BlogCard.vue-->
+<!--layers\\theme-simplica\\components\\BlogCard.vue-->
 <template>
   <div class="flex h-full flex-col gap-4 bg-white font-sans">
     <NuxtLink :to="post.path">
