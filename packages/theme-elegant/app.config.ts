@@ -1,27 +1,30 @@
 // packages/theme-elegant/app.config.ts
 export default defineAppConfig({
   themeElegant: {
-    // global-ish visual prefs for this theme
+    // Global-ish layout prefs
     layout: {
-      constrainedWidthClass: 'max-w-4xl',   // for single pages
-      fullWidthClass: 'max-w-6xl',         // for list pages
-      showSidebarOnSingle: true,
-      sidebarPosition: 'right',            // 'left' | 'right'
+      constrainedWidthClass: 'max-w-3xl', // for single pages
+      fullWidthClass: 'max-w-6xl',       // for list pages
+      showSidebarOnSingle: false,
+      sidebarPosition: 'right',          // 'left' | 'right'
     },
 
+    // Typography
     typography: {
-      bodySize: 'prose-lg',                // maps to prose modifier class
+      bodySize: 'prose-lg',              // maps to prose modifier class
       enableDropCap: false,
-      showReadingTime: true,
+      showReadingTime: false,            // can flip to true later when you have data
     },
-   blog: {
+
+    blog: {
+      // Listing layout
       listing: {
         postsPerPage: 9,
-        layout: 'grid',
+        layout: 'grid',                  // 'grid' | 'list'
         showHeroFeaturedPost: true,
         hero: {
           enabled: true,
-          variant: 'overlay',
+          variant: 'overlay',            // 'overlay' | 'simple'
           label: 'Featured',
         },
         showExcerpt: true,
@@ -44,9 +47,51 @@ export default defineAppConfig({
           },
         },
       },
+
+      // Single post layout
       single: {
+        heroHeightClass: 'h-80',
+        showHeroImage: true,
+
+        showCategoryPill: true,
+        showAuthor: true,
+        showDate: true,
+
         showBackLink: true,
-        showOutline: true
+        backLinkText: '← Back to Blog',
+
+        showSidebar: false,
+        showOutline: false,             // you override to true in playground
       },
+
+      // Related posts section
+      relatedPosts: {
+        enabled: true,
+        title: 'Related Posts',
+        numberOfPosts: 3,
+        sameCategory: true,
+        sameTags: false,
+        showMoreButton: true,
+        moreButtonText: 'View All Posts',
+      },
+
+      // CTAs
+      cta: {
+        belowHero: {
+          enabled: true,
+          title: 'Like what you’re reading?',
+          text: 'Subscribe to get more stories like this in your inbox.',
+          buttonText: 'Subscribe',
+          buttonTo: '/newsletter',
+        },
+        afterContent: {
+          enabled: false,
+          title: 'Ready to take the next step?',
+          text: 'Talk to us about implementing these ideas in your own project.',
+          buttonText: 'Book a call',
+          buttonTo: '/contact-us',
+        },
+      },
+    },
   },
-}})
+})

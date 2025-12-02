@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   extends: ['../packages/theme-elegant'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/content', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts'],
+  modules: ['@nuxt/content', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/image'],
   googleFonts: {
     families: {
       Inter: {
